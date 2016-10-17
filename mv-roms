@@ -1,0 +1,27 @@
+#!/bin/bash
+# mv-roms
+# move CAPS-LOCK mame roms
+
+## variables
+romdir="$HOME/.mame/roms"
+mkdir -p "$HOME/Downloads/romstmp"
+romdirmv="$HOME/Downloads/romstmp"
+i=1
+
+shopt -s extglob	# generic expressions +() on
+
+
+## loop
+ls $romdir | while read "rom"
+do
+	
+	if [[ $rom == +(*[[:upper:]]*) ]] ; then 
+		mv "$romdir/$rom" $romdirmv
+		echo "$i) $rom moved"
+		(( i++ ))
+	fi
+done	
+
+echo "end, go to $romdirmv"
+
+exit 69
