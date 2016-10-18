@@ -1,27 +1,40 @@
 #!/bin/bash
-# mv-roms
+################## mv-roms
 # move CAPS-LOCK mame roms
+# into names in lower case
+##########################
 
 ## variables
 romdir="$HOME/.mame/roms"
 mkdir -p "$HOME/Downloads/romstmp"
 romdirmv="$HOME/Downloads/romstmp"
 i=1
+boul=0
+
+## debug
+# romdir="$HOME/coding/bash/mv-roms/test/rom"
+# romdirmv="$HOME/coding/bash/mv-roms/test/deplac"
 
 shopt -s extglob	# generic expressions +() on
 
-
-## loop
-ls $romdir | while read "rom"
+## loop 
+ls $romdir > lstmp
+while read "rom"
 do
 	
 	if [[ $rom == +(*[[:upper:]]*) ]] ; then 
-		mv "$romdir/$rom" $romdirmv
-		echo "$i) $rom moved"
+		mv "$romdir/$rom" "$romdirmv/${rom,,}"
+		echo "$i) \"$rom\" moved, new name :: \"${rom,,}\""
 		(( i++ ))
+		boul=1	# need input/output file 'lstmp'
 	fi
-done	
+done <lstmp
+rm lstmp
 
-echo "end, go to $romdirmv"
+## flag
+case $boul in
+	1) echo "end, go to $romdirmv" ;;
+	*) echo "nothing to change, move along" && exit 88
+esac
 
 exit 69
